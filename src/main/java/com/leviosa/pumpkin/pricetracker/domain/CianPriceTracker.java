@@ -1,10 +1,11 @@
 package com.leviosa.pumpkin.pricetracker.domain;
 
+@PriceTrackerType(EPriceTracker.CIAN)
 public class CianPriceTracker implements PriceTracker {
 
     @Override
     public void getPrice() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        System.out.println("cian tracker");
     }
     
 }

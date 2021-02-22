@@ -5,15 +5,16 @@ import org.quartz.Job;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 import com.leviosa.pumpkin.pricetracker.domain.*;
-import java.util.ArrayList;
 
 public class PriceTrackerJob implements Job {
 
     @Override
     public void execute(JobExecutionContext jec) throws JobExecutionException {
-        List<PriceTracker> trackers = new ArrayList<>();
-        //add trackers
-        //run trackers
+        List<PriceTracker> trackers = List.of(
+                PriceTrackerFactory.createPriceTracker(EPriceTracker.YANDEX),
+                PriceTrackerFactory.createPriceTracker(EPriceTracker.CIAN)
+        );
+        trackers.forEach(PriceTracker::getPrice);
         //produce report
     }
     
