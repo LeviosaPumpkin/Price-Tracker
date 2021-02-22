@@ -5,17 +5,33 @@ import org.quartz.Job;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 import com.leviosa.pumpkin.pricetracker.domain.*;
+import java.util.Map;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+import org.quartz.JobDataMap;
 
 public class PriceTrackerJob implements Job {
 
     @Override
-    public void execute(JobExecutionContext jec) throws JobExecutionException {
-        List<PriceTracker> trackers = List.of(
-                PriceTrackerFactory.createPriceTracker(EPriceTracker.YANDEX),
-                PriceTrackerFactory.createPriceTracker(EPriceTracker.CIAN)
+    public void execute(JobExecutionContext context) throws JobExecutionException {
+        JobDataMap dataMap = context.getJobDetail().getJobDataMap();
+        
+        Map<EPriceTracker, PriceTracker> trackers = Map.of(
+                EPriceTracker.YANDEX, PriceTrackerFactory.createPriceTracker(EPriceTracker.YANDEX),
+                EPriceTracker.CIAN, PriceTrackerFactory.createPriceTracker(EPriceTracker.CIAN)
         );
-        trackers.forEach(PriceTracker::getPrice);
+        trackers.get(EPriceTracker.YANDEX).setIds(getIds(dataMap, "yandexIds"));
+        trackers.get(EPriceTracker.YANDEX).setIds(getIds(dataMap, "cianIds"));
+
+        trackers.values().forEach(PriceTracker::getPrice);
         //produce report
     }
     
+    private List<Long> getIds(JobDataMap dataMap, String priceTrackerType) {
+        return Stream.of(dataMap.get(priceTrackerType)
+                .toString()
+                .split(","))
+            .map(Long::parseLong)
+            .collect(Collectors.toList());
+    }
 }

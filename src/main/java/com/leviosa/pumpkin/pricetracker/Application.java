@@ -23,6 +23,8 @@ public class Application {
             JobDetail job = JobBuilder
                     .newJob(PriceTrackerJob.class)
                     .withIdentity("priceTracker", "group")
+                    .usingJobData("yandexIds", "1,2,3")
+                    .usingJobData("cianIds", "1,2")
                     .build();
 
             Trigger trigger = TriggerBuilder
@@ -31,7 +33,7 @@ public class Application {
                     .startNow()
                     .withSchedule(SimpleScheduleBuilder
                             .simpleSchedule()
-                            .withIntervalInSeconds(600)
+                            .withIntervalInSeconds(60)
                             .repeatForever())
                     .build();
 
