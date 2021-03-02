@@ -22,9 +22,10 @@ public class PriceTrackerJob implements Job {
         );
         trackers.get(EPriceTracker.YANDEX).setIds(getIds(dataMap, "yandexIds"));
         trackers.get(EPriceTracker.YANDEX).setIds(getIds(dataMap, "cianIds"));
+        
+        Map<String, Integer> result = trackers.values().parallelStream().map(PriceTracker::getPrices).collect(Collectors.toMap(Map::keySet, Map::values));
 
-        trackers.values().forEach(PriceTracker::getPrice);
-        //produce report
+        //Map<String, Integer> report = trackers.values().parallelStream().map(PriceTracker::getPrices).collect(Collectors.toConcurrentMap());
     }
     
     private List<Long> getIds(JobDataMap dataMap, String priceTrackerType) {
