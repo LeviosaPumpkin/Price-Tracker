@@ -17,15 +17,18 @@ public class PriceTrackerJob implements Job {
         JobDataMap dataMap = context.getJobDetail().getJobDataMap();
         
         Map<EPriceTracker, PriceTracker> trackers = Map.of(
-                EPriceTracker.YANDEX, PriceTrackerFactory.createPriceTracker(EPriceTracker.YANDEX),
+                //EPriceTracker.YANDEX, PriceTrackerFactory.createPriceTracker(EPriceTracker.YANDEX),
                 EPriceTracker.CIAN, PriceTrackerFactory.createPriceTracker(EPriceTracker.CIAN)
         );
-        trackers.get(EPriceTracker.YANDEX).setIds(getIds(dataMap, "yandexIds"));
-        trackers.get(EPriceTracker.YANDEX).setIds(getIds(dataMap, "cianIds"));
+        //trackers.get(EPriceTracker.YANDEX).setIds(getIds(dataMap, "yandexIds"));
+        trackers.get(EPriceTracker.CIAN).setIds(getIds(dataMap, "cianIds"));
+        trackers
+                .forEach((k,v) -> {
+                    v.getPrices()
+                            .entrySet()
+                            .forEach(entry -> System.out.println(entry.getKey() + " " + entry.getValue()));
+                });
         
-        Map<String, Integer> result = trackers.values().parallelStream().map(PriceTracker::getPrices).collect(Collectors.toMap(Map::keySet, Map::values));
-
-        //Map<String, Integer> report = trackers.values().parallelStream().map(PriceTracker::getPrices).collect(Collectors.toConcurrentMap());
     }
     
     private List<Long> getIds(JobDataMap dataMap, String priceTrackerType) {
@@ -35,4 +38,5 @@ public class PriceTrackerJob implements Job {
             .map(Long::parseLong)
             .collect(Collectors.toList());
     }
+    
 }

@@ -23,8 +23,8 @@ public class Application {
             JobDetail job = JobBuilder
                     .newJob(PriceTrackerJob.class)
                     .withIdentity("priceTracker", "group")
-                    .usingJobData("yandexIds", "1,2,3")
-                    .usingJobData("cianIds", "1,2")
+                    .usingJobData("yandexIds", "5250032644525504257")
+                    .usingJobData("cianIds", "234616139,234616123")
                     .build();
 
             Trigger trigger = TriggerBuilder

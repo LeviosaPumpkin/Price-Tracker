@@ -27,7 +27,7 @@ public class YandexRealtyPriceTracker implements PriceTracker {
             String body = (String) response.body();
             body = body.substring(body.indexOf("<h3 class=\"OfferBaseInfo__price\"><div class=\"Price\"><span class=\"price\">"), body.indexOf("₽</span><span></span></div></h3>"));
             return Integer.parseInt(body.substring(body.lastIndexOf(">")).replaceAll(" ", ""));
-        } catch (IOException | InterruptedException ex) {
+        } catch (IOException | InterruptedException | StringIndexOutOfBoundsException ex) {
             Logger.getLogger(YandexRealtyPriceTracker.class.getName()).log(Level.SEVERE, null, ex);
         } 
         return null;
